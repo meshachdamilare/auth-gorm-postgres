@@ -20,4 +20,5 @@ func (ac *AuthRouteController) AuthRoute(rg *gin.RouterGroup) {
 	router.POST("/login", ac.authController.SignInUser)
 	router.GET("/refresh", ac.authController.RefreshAccessToken)
 	router.GET("/logout", middleware.AuthMiddleware, ac.authController.SignOutUser)
+	router.GET("/verifyemail/:verificationCode", ac.authController.VerifyEmail)
 }

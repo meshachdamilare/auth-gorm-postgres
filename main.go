@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/meshachdamilare/auth-with-gorm-postgres/config"
 	"github.com/meshachdamilare/auth-with-gorm-postgres/controllers"
@@ -39,6 +40,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("? Could not load environment variables", err)
 	}
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:8000", conf.ClientOrigin}
+	corsConfig.AllowCredentials = true
+
+	server.Use(cors.New(corsConfig))
+
 	router := server.Group("/api")
 	router.GET("/check", func(c *gin.Context) {
 		message := "Testing connection"
