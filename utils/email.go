@@ -8,8 +8,8 @@ import (
 	"github.com/meshachdamilare/auth-with-gorm-postgres/models"
 	"gopkg.in/gomail.v2"
 	"html/template"
-	"io/fs"
 	"log"
+	"os"
 	"path/filepath"
 )
 
@@ -19,9 +19,11 @@ type EmailData struct {
 	Subject   string
 }
 
+// ? Email template parser
+
 func ParseTemplateDir(dir string) (*template.Template, error) {
 	var paths []string
-	err := filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -30,13 +32,15 @@ func ParseTemplateDir(dir string) (*template.Template, error) {
 		}
 		return nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
+
 	return template.ParseFiles(paths...)
 }
 
-func SendEmail(user *models.User, data *EmailData) {
+func SendEmail(user *models.User, data *EmailData, emailTemp string) {
 	conf, err := config.LoadConfig(".")
 
 	if err != nil {
@@ -58,7 +62,7 @@ func SendEmail(user *models.User, data *EmailData) {
 		log.Fatal("Could not parse template", err)
 	}
 
-	template.ExecuteTemplate(&body, "verificationCode.html", &data)
+	template.ExecuteTemplate(&body, emailTemp, &data)
 
 	m := gomail.NewMessage()
 
