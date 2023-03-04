@@ -18,6 +18,9 @@ var (
 
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
+
+	PostController      controllers.PostController
+	PostRouteController routes.PostRouteController
 )
 
 func init() {
@@ -32,6 +35,9 @@ func init() {
 
 	UserController = controllers.NewUserController(config.DB)
 	UserRouteController = routes.NewRouteUserController(UserController)
+
+	PostController = controllers.NewPostController(config.DB)
+	PostRouteController = routes.NewRoutePostController(PostController)
 	server = gin.Default()
 }
 
@@ -55,6 +61,7 @@ func main() {
 
 	AuthRouteController.AuthRoute(router)
 	UserRouteController.UserRoute(router)
+	PostRouteController.PostRoute(router)
 
 	log.Fatal(server.Run(":" + conf.ServerPort))
 
