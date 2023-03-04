@@ -14,7 +14,7 @@ func init() {
 		log.Fatal("? Could not load environment variables", err)
 	}
 	config.ConnectDB(&conf)
-	config.DB.AutoMigrate(User{})
+	config.DB.AutoMigrate(&User{}, &Post{})
 	fmt.Println(" Migration complete.")
 }
 
